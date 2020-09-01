@@ -5,8 +5,221 @@
 		<description>Recent content in Posts on Jam Productions</description>
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
-		<lastBuildDate>Fri, 13 Sep 2019 00:00:00 +0000</lastBuildDate>
+		<lastBuildDate>Fri, 03 Jan 2020 00:00:00 +0000</lastBuildDate>
 		<atom:link href="https://jamproductions.pk/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Encrypted Arch Linux installation</title>
+			<link>https://jamproductions.pk/encrypted-archlinux/</link>
+			<pubDate>Fri, 03 Jan 2020 00:00:00 +0000</pubDate>
+			
+			<guid>https://jamproductions.pk/encrypted-archlinux/</guid>
+			<description>What&amp;rsquo;s Arch Linux? Arch Linux is a free and open source linux distribution based on the rule Keep it Simple.
+Installation Arch Linux has no graphical installer. You have to install using CLI.
+Installation media creation Go to Downloads page and select a nearby mirror. Download the iso file. If you&amp;rsquo;re on Windows, you can use rufus to create a bootable media.
+On linux, you can use dd:
+# dd if=downloaded iso file of=/dev/sdX status=progress where X is your USB device&amp;rsquo;s ID.</description>
+			<content type="html"><![CDATA[<h1 id="whats-arch-linux">What&rsquo;s <strong>Arch Linux</strong>?</h1>
+<p><img src="/images/arch.jpg" alt="Arch Linux"></p>
+<p><a href="https://archlinux.org">Arch Linux</a> is a free
+and open source linux distribution based on the rule Keep it Simple.</p>
+<h3 id="installation">Installation</h3>
+<p>Arch Linux has no graphical installer. You have to install using CLI.</p>
+<h3 id="installation-media-creation">Installation media creation</h3>
+<p>Go to <a href="https://archlinux.org/download">Downloads page</a> and select a nearby mirror. Download the iso file. If you&rsquo;re on Windows, you can use rufus to create a bootable media.</p>
+<p>On linux, you can use <strong>dd</strong>:</p>
+<pre><code># dd if=downloaded iso file of=/dev/sdX status=progress
+</code></pre><p>where X is your USB device&rsquo;s ID. Don&rsquo;t use a single partition. Use the whole
+device.</p>
+<h3 id="boot-the-media">Boot the media</h3>
+<p>Insert the USB device and reboot the computer. Press the button configured to
+come boot options up. Choose your USB device from boot options.</p>
+<h3 id="connect-to-internet">Connect to internet</h3>
+<p>If you have ethernet, Arch linux iso will detect it. If you have a wireless
+connection, you have to connect it manually.</p>
+<pre><code># wpa_passphrase 'wifi APN' 'wifi password' &gt;&gt; /etc/wpa_supplicant/wpa_supplicant.conf
+# wpa_supplicant -Bc /etc/wpa_supplicant/wpa_supplicant.conf -i 'wifi interface'
+# dhclient
+</code></pre><p>where wifi APN is the access point name you get when you scan for your wifi. And
+wifi interface you can get using iwconfig. It might be wlp3s0 or wlan0.
+Or you can use wifi-menu.</p>
+<p>Now ping some website <strong>abdullah.today</strong> to check if you&rsquo;re connected to
+internet or not.</p>
+<h3 id="partitioning">Partitioning</h3>
+<p>There are multiple ways to encrypt the installation. One of them in LUKS on lvm.
+It&rsquo;s straightforward.</p>
+<p>Assuming you have a UEFI system and sda is your drive where you wanna install
+archlinux.</p>
+<pre><code># gdisk /dev/sda
+</code></pre><pre><code>GPT fdisk (gdisk) version 1.0.1
+
+  Partition table scan:
+  MBR: protective
+  BSD: not present
+  APM: not present
+  GPT: present
+
+Found valid GPT with protective MBR; using GPT.
+
+Command (? for help): o
+This option deletes all partitions and creates a new protective MBR.
+Proceed? (Y/N): Y
+
+Command (? for help): n
+Partition number (1-128, default 1): 
+First sector (34-242187466, default = 2048) or {+-}size{KMGTP}: 
+Last sector (2048-242187466, default = 242187466) or {+-}size{KMGTP}:
++512M
+Current type is 'Linux filesystem'
+Hex code or GUID (L to show codes, Enter = 8300): EF00
+Changed type of partition to 'EFI System'
+
+Command (? for help): n
+Partition number (2-128, default 2): 
+First sector (34-242187466, default = 1050624) or {+-}size{KMGTP}: 
+Last sector (1050624-242187466, default = 242187466) or {+-}size{KMGTP}: 
+Current type is 'Linux filesystem'
+Hex code or GUID (L to show codes, Enter = 8300): 8309
+Changed type of partition to 'Linux LUKS'
+
+Command (? for help): p
+Disk /dev/sda: 242187500 sectors, 115.5 GiB
+Logical sector size: 512 bytes
+Disk identifier (GUID): 569FFB67-6969-49E4-B999-15A681987564
+Partition table holds up to 128 entries
+First usable sector is 34, last usable sector is 242187466
+Partitions will be aligned on 2048-sector boundaries
+Total free space is 2014 sectors (1007.0 KiB)
+
+Number  Start (sector)    End (sector)  Size       Code  Name
+   1            2048         1050623   512.0 MiB   EF00  EFI System
+   2         1050624       242187466   115.0 GiB   8309  Linux LUKS
+
+command (? for help): w
+
+</code></pre><p>Type o and then Y.</p>
+<p>Type n to create a new partition. Select 1 to create a very first partition for
+EFI. Hit enter and then type +512M to create a 512 Mbs partition. Enter ef00 as
+partition type.</p>
+<p>Again type n to create a new partition. Select 2. Hit enter and again enter to
+give it rest of the storage if you don&rsquo;t wanna install some other operating
+system. Hex code for LUKS is 8309 but you can go without it. By default it will
+be 8300 (linux filesystem).</p>
+<p>Type p to check if everything is fine. And once satisfied, type w and hit enter
+to save the work.</p>
+<h3 id="create-file-systems">Create file systems</h3>
+<p>First, create a filesystem for EFI.</p>
+<pre><code># mkfs.vfat -F32 /dev/sda1
+</code></pre><p>Now create a LUKS container.</p>
+<pre><code># cryptsetup luksFormat /dev/sda2
+</code></pre><p>It will ask you to confirm. Type YES in all uppercase. Then choose a good
+passphrase. Write it if you can&rsquo;t memorize it. Once forgotten, you can&rsquo;t recover
+it.</p>
+<p>Now open the new container.</p>
+<pre><code># cryptsetup open /dev/sda2 cryptlvm
+
+</code></pre><p>Create a physical volume in this LUKS container.</p>
+<pre><code># pvcreate /dev/mapper/cryptlvm
+</code></pre><p>Create a volume group. I&rsquo;ll name it nix.</p>
+<pre><code># vgcreate nix /dev/mapper/cryptlvm
+</code></pre><p>Create logical volumes on volume group. I&rsquo;m creating three, one for encrypted swap
+and another for home and last one for root.</p>
+<pre><code># lvcreate -L 8G nix -n swap
+# lvcreate -L 25G nix -n root
+# lvcreate -l +100%FREE nix -n home
+</code></pre><p>Now create filesystems.</p>
+<pre><code># mkfs.ext4 /dev/mapper/nix-root
+# mkfs.ext4 /dev/mapper/nix-home
+# mkswap /dev/mapper/nix-swap
+</code></pre><p>Mount them.</p>
+<pre><code># mount /dev/mapper/nix-root /mnt
+# mkdir /mnt/home
+# mkdir /mnt/boot
+# mount /dev/mapper/nix-home /mnt/home
+# mount /dev/sda1 /mnt/boot
+</code></pre><p>Turn the swap partition on.</p>
+<pre><code># swapon /dev/mapper/nix-swap
+</code></pre><h3 id="install-the-base-system">Install the base system</h3>
+<pre><code># pacstrap /mnt base base-devel linux linux-firmware
+</code></pre><h3 id="generate-fstab">Generate fstab</h3>
+<pre><code># genfstab -U /mnt &gt;&gt; /mnt/etc/fstab
+</code></pre><blockquote>
+<p><strong><em>NOTE:</em></strong> If you&rsquo;re using an SSD, replace relatime with noatime in  /mnt/etc/fstab except boot partition.</p>
+</blockquote>
+<h3 id="chroot-into-new-system">chroot into new system.</h3>
+<pre><code># arch-chroot /mnt
+</code></pre><p>Set the timezone.</p>
+<pre><code># ln -s /usr/share/zoneinfo/Asia/Karachi /etc/localtime
+# hwclock --systohc
+</code></pre><p>Replace Asia with your continent and Karachi with city.</p>
+<p>Set hostname</p>
+<pre><code># echo nix &gt; /etc/hostname
+</code></pre><p>Replace nix with name you wanna give your machine to.</p>
+<p>Set locales</p>
+<pre><code># vim /etc/locale.gen
+
+  #en_HK ISO-8859-1  
+  #en_IE.UTF-8 UTF-8  
+  #en_IE ISO-8859-1  
+  #en_IE@euro ISO-8859-15  
+  #en_IL UTF-8  
+  #en_IN UTF-8  
+  #en_NG UTF-8  
+  #en_NZ.UTF-8 UTF-8  
+  #en_NZ ISO-8859-1  
+  #en_PH.UTF-8 UTF-8  
+  #en_PH ISO-8859-1  
+  #en_SC.UTF-8 UTF-8  
+  #en_SG.UTF-8 UTF-8  
+  #en_SG ISO-8859-1  
+  en_US.UTF-8 UTF-8  
+  #en_US ISO-8859-1  
+  #en_ZA.UTF-8 UTF-8  
+  #en_ZA ISO-8859-1  
+  #en_ZM UTF-8  
+  #en_ZW.UTF-8 UTF-8  
+  #en_ZW ISO-8859-1  
+  #eo UTF-8  
+  #es_AR.UTF-8 UTF-8  
+  #es_AR ISO-8859-1  
+  #es_BO.UTF-8 UTF-8  
+</code></pre><p>Uncomment en_US.UTF-8 UTF-8 . (remove # from the beginning)</p>
+<pre><code># echo LANG=en_US.UTF-8 &gt; /etc/locale.conf
+# locale-gen
+</code></pre><p>Install some necessary software.</p>
+<pre><code># pacman -S wpa_supplicant dhclient dialog
+</code></pre><p>Create a user.</p>
+<pre><code># useradd -m -G wheel 'username'
+# passwd 'username'
+</code></pre><p>Create root password</p>
+<pre><code># passwd
+</code></pre><h3 id="mkinitcpio-configuration">mkinitcpio configuration</h3>
+<p>Edit the file <strong>/etc/mkinitcpio.conf</strong>. Copy this line or write in order in hooks line. Order matters so don&rsquo;t ignore or you will get un-bootable system.</p>
+<pre><code># vim /etc/mkinitcpio.conf
+
+HOOKS=(base udev autodetect keyboard keymap consolefont modconf block encrypt lvm2 filesystems resume fsck)
+
+</code></pre><p>Generate mkinitcpio</p>
+<pre><code>mkinitcpio -p linux
+</code></pre><h3 id="install-bootloader">Install bootloader</h3>
+<pre><code># bootctl install 
+</code></pre><p>Create entries.</p>
+<p>Create a file <strong>/boot/loader/entries/arch.conf</strong>.</p>
+<pre><code># vim /boot/loader/entries/arch.conf
+
+title	ArchLinux
+linux	/vmlinuz-linux
+initrd	/initramfs-linux.img
+options cryptdevice=UUID=&lt;YOUR-PARTITION-UUID&gt;:lvm:allow-discards resume=/dev/mapper/nix-swap root=/dev/mapper/nix-root rw quiet
+
+</code></pre><p>Where UUID you can get using blkid. It would be in /dev/sda2.</p>
+<h3 id="un-mount-and-reboot">Un-mount and reboot</h3>
+<pre><code># exit
+# umount /mnt
+# reboot
+</code></pre><p>Remove the USB device. And enjoy your new archlinux encrypted installation.</p>
+]]></content>
+		</item>
 		
 		<item>
 			<title>EFISTUB</title>

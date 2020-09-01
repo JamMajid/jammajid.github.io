@@ -8,6 +8,56 @@
   </url>
   
   <url>
+    <loc>https://jamproductions.pk/tags/archlinux/</loc>
+    <lastmod>2020-01-03T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jamproductions.pk/encrypted-archlinux/</loc>
+    <lastmod>2020-01-03T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jamproductions.pk/tags/encrypted-install/</loc>
+    <lastmod>2020-01-03T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jamproductions.pk/tags/encryption/</loc>
+    <lastmod>2020-01-03T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jamproductions.pk/</loc>
+    <lastmod>2020-01-03T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jamproductions.pk/tags/luks/</loc>
+    <lastmod>2020-01-03T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jamproductions.pk/tags/luks_on_lvm/</loc>
+    <lastmod>2020-01-03T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jamproductions.pk/tags/lvm/</loc>
+    <lastmod>2020-01-03T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jamproductions.pk/posts/</loc>
+    <lastmod>2020-01-03T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jamproductions.pk/tags/</loc>
+    <lastmod>2020-01-03T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://jamproductions.pk/tags/bootloader/</loc>
     <lastmod>2019-09-13T00:00:00+00:00</lastmod>
   </url>
@@ -24,21 +74,6 @@
   
   <url>
     <loc>https://jamproductions.pk/tags/efistub/</loc>
-    <lastmod>2019-09-13T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://jamproductions.pk/</loc>
-    <lastmod>2019-09-13T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://jamproductions.pk/posts/</loc>
-    <lastmod>2019-09-13T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://jamproductions.pk/tags/</loc>
     <lastmod>2019-09-13T00:00:00+00:00</lastmod>
   </url>
   

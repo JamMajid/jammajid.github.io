@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="theme-color" content="#494f5c">
+	<meta name="msapplication-TileColor" content="#494f5c">
+<meta itemprop="name" content="Encrypted Arch Linux installation">
+<meta itemprop="description" content="Encrypted Arch Linux installation">
+<meta itemprop="datePublished" content="2020-01-03T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2020-01-03T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1033">
+
+
+
+<meta itemprop="keywords" content="archlinux,encryption,encrypted install,luks,lvm,luks_on_lvm," />
+<meta property="og:title" content="Encrypted Arch Linux installation" />
+<meta property="og:description" content="Encrypted Arch Linux installation" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://jamproductions.pk/encrypted-archlinux/" />
+<meta property="article:published_time" content="2020-01-03T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-01-03T00:00:00+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Encrypted Arch Linux installation"/>
+<meta name="twitter:description" content="Encrypted Arch Linux installation"/>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+	<link rel="shortcut icon" href="/favicon.ico">
+
+	<title>Encrypted Arch Linux installation</title>
+	<link rel="stylesheet" href="https://jamproductions.pk/css/style.min.eac77496566fd7d5768fd650ddb0b2b181ca6a2d7c5fdd6fe6b8ba4bf47e566f.css" integrity="sha256-6sd0llZv19V2j9ZQ3bCysYHKai18X91v5ri6S/R+Vm8=" crossorigin="anonymous">
+	
+
+</head>
+
+<body id="page">
+	
+	<header id="site-header" class="animated slideInUp">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://jamproductions.pk/">Jam Productions</a>
+				</div>
+				<nav class="site-nav hide-in-mobile">
+					
+				<a href="https://jamproductions.pk/posts/">Posts</a>
+				<a href="https://jamproductions.pk/poetry/">Poetry</a>
+				<a href="https://jamproductions.pk/software/">Software</a>
+				<a href="https://jamproductions.pk/about/">About</a>
+
+				</nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<button id="toc-btn" class="hdr-btn desktop-only-ib" title="Table of Contents"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3" y2="6"></line><line x1="3" y1="12" x2="3" y2="12"></line><line x1="3" y1="18" x2="3" y2="18"></line></svg></button><span class="hdr-social hide-in-mobile"><a href="" target="_blank" rel="noopener me" title=""><svg xmlns="http://www.w3.org/2000/svg" class="feather feather-link" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a><a href="https://instagram.com/jammajid4k" target="_blank" rel="noopener me" title="Instagram"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"></line></svg></a><a href="https://facebook.com/jammajid507" target="_blank" rel="noopener me" title="Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a><a href="https://youtube.com/channel/UC2le9GWl_r3JPg4UCrhYK6Q" target="_blank" rel="noopener me" title="Youtube"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg></a></span><button id="menu-btn" class="hdr-btn" title="Menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://jamproductions.pk/posts/">Posts</a></li>
+			<li><a href="https://jamproductions.pk/poetry/">Poetry</a></li>
+			<li><a href="https://jamproductions.pk/software/">Software</a></li>
+			<li><a href="https://jamproductions.pk/about/">About</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner animated fadeIn faster">
+		<article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>Jan 3, 2020</span></div>
+				<h1>Encrypted Arch Linux installation</h1>
+			</header>
+			<div class="content">
+				<h1 id="whats-arch-linux">What&rsquo;s <strong>Arch Linux</strong>?<a href="#whats-arch-linux" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<p><img src="/images/arch.jpg" alt="Arch Linux"></p>
+<p><a href="https://archlinux.org">Arch Linux</a> is a free
+and open source linux distribution based on the rule Keep it Simple.</p>
+<h3 id="installation">Installation<a href="#installation" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Arch Linux has no graphical installer. You have to install using CLI.</p>
+<h3 id="installation-media-creation">Installation media creation<a href="#installation-media-creation" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Go to <a href="https://archlinux.org/download">Downloads page</a> and select a nearby mirror. Download the iso file. If you&rsquo;re on Windows, you can use rufus to create a bootable media.</p>
+<p>On linux, you can use <strong>dd</strong>:</p>
+<pre><code># dd if=downloaded iso file of=/dev/sdX status=progress
+</code></pre><p>where X is your USB device&rsquo;s ID. Don&rsquo;t use a single partition. Use the whole
+device.</p>
+<h3 id="boot-the-media">Boot the media<a href="#boot-the-media" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Insert the USB device and reboot the computer. Press the button configured to
+come boot options up. Choose your USB device from boot options.</p>
+<h3 id="connect-to-internet">Connect to internet<a href="#connect-to-internet" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>If you have ethernet, Arch linux iso will detect it. If you have a wireless
+connection, you have to connect it manually.</p>
+<pre><code># wpa_passphrase 'wifi APN' 'wifi password' &gt;&gt; /etc/wpa_supplicant/wpa_supplicant.conf
+# wpa_supplicant -Bc /etc/wpa_supplicant/wpa_supplicant.conf -i 'wifi interface'
+# dhclient
+</code></pre><p>where wifi APN is the access point name you get when you scan for your wifi. And
+wifi interface you can get using iwconfig. It might be wlp3s0 or wlan0.
+Or you can use wifi-menu.</p>
+<p>Now ping some website <strong>abdullah.today</strong> to check if you&rsquo;re connected to
+internet or not.</p>
+<h3 id="partitioning">Partitioning<a href="#partitioning" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>There are multiple ways to encrypt the installation. One of them in LUKS on lvm.
+It&rsquo;s straightforward.</p>
+<p>Assuming you have a UEFI system and sda is your drive where you wanna install
+archlinux.</p>
+<pre><code># gdisk /dev/sda
+</code></pre><pre><code>GPT fdisk (gdisk) version 1.0.1
+
+  Partition table scan:
+  MBR: protective
+  BSD: not present
+  APM: not present
+  GPT: present
+
+Found valid GPT with protective MBR; using GPT.
+
+Command (? for help): o
+This option deletes all partitions and creates a new protective MBR.
+Proceed? (Y/N): Y
+
+Command (? for help): n
+Partition number (1-128, default 1): 
+First sector (34-242187466, default = 2048) or {+-}size{KMGTP}: 
+Last sector (2048-242187466, default = 242187466) or {+-}size{KMGTP}:
++512M
+Current type is 'Linux filesystem'
+Hex code or GUID (L to show codes, Enter = 8300): EF00
+Changed type of partition to 'EFI System'
+
+Command (? for help): n
+Partition number (2-128, default 2): 
+First sector (34-242187466, default = 1050624) or {+-}size{KMGTP}: 
+Last sector (1050624-242187466, default = 242187466) or {+-}size{KMGTP}: 
+Current type is 'Linux filesystem'
+Hex code or GUID (L to show codes, Enter = 8300): 8309
+Changed type of partition to 'Linux LUKS'
+
+Command (? for help): p
+Disk /dev/sda: 242187500 sectors, 115.5 GiB
+Logical sector size: 512 bytes
+Disk identifier (GUID): 569FFB67-6969-49E4-B999-15A681987564
+Partition table holds up to 128 entries
+First usable sector is 34, last usable sector is 242187466
+Partitions will be aligned on 2048-sector boundaries
+Total free space is 2014 sectors (1007.0 KiB)
+
+Number  Start (sector)    End (sector)  Size       Code  Name
+   1            2048         1050623   512.0 MiB   EF00  EFI System
+   2         1050624       242187466   115.0 GiB   8309  Linux LUKS
+
+command (? for help): w
+
+</code></pre><p>Type o and then Y.</p>
+<p>Type n to create a new partition. Select 1 to create a very first partition for
+EFI. Hit enter and then type +512M to create a 512 Mbs partition. Enter ef00 as
+partition type.</p>
+<p>Again type n to create a new partition. Select 2. Hit enter and again enter to
+give it rest of the storage if you don&rsquo;t wanna install some other operating
+system. Hex code for LUKS is 8309 but you can go without it. By default it will
+be 8300 (linux filesystem).</p>
+<p>Type p to check if everything is fine. And once satisfied, type w and hit enter
+to save the work.</p>
+<h3 id="create-file-systems">Create file systems<a href="#create-file-systems" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>First, create a filesystem for EFI.</p>
+<pre><code># mkfs.vfat -F32 /dev/sda1
+</code></pre><p>Now create a LUKS container.</p>
+<pre><code># cryptsetup luksFormat /dev/sda2
+</code></pre><p>It will ask you to confirm. Type YES in all uppercase. Then choose a good
+passphrase. Write it if you can&rsquo;t memorize it. Once forgotten, you can&rsquo;t recover
+it.</p>
+<p>Now open the new container.</p>
+<pre><code># cryptsetup open /dev/sda2 cryptlvm
+
+</code></pre><p>Create a physical volume in this LUKS container.</p>
+<pre><code># pvcreate /dev/mapper/cryptlvm
+</code></pre><p>Create a volume group. I&rsquo;ll name it nix.</p>
+<pre><code># vgcreate nix /dev/mapper/cryptlvm
+</code></pre><p>Create logical volumes on volume group. I&rsquo;m creating three, one for encrypted swap
+and another for home and last one for root.</p>
+<pre><code># lvcreate -L 8G nix -n swap
+# lvcreate -L 25G nix -n root
+# lvcreate -l +100%FREE nix -n home
+</code></pre><p>Now create filesystems.</p>
+<pre><code># mkfs.ext4 /dev/mapper/nix-root
+# mkfs.ext4 /dev/mapper/nix-home
+# mkswap /dev/mapper/nix-swap
+</code></pre><p>Mount them.</p>
+<pre><code># mount /dev/mapper/nix-root /mnt
+# mkdir /mnt/home
+# mkdir /mnt/boot
+# mount /dev/mapper/nix-home /mnt/home
+# mount /dev/sda1 /mnt/boot
+</code></pre><p>Turn the swap partition on.</p>
+<pre><code># swapon /dev/mapper/nix-swap
+</code></pre><h3 id="install-the-base-system">Install the base system<a href="#install-the-base-system" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<pre><code># pacstrap /mnt base base-devel linux linux-firmware
+</code></pre><h3 id="generate-fstab">Generate fstab<a href="#generate-fstab" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<pre><code># genfstab -U /mnt &gt;&gt; /mnt/etc/fstab
+</code></pre><blockquote>
+<p><strong><em>NOTE:</em></strong> If you&rsquo;re using an SSD, replace relatime with noatime in  /mnt/etc/fstab except boot partition.</p>
+</blockquote>
+<h3 id="chroot-into-new-system">chroot into new system.<a href="#chroot-into-new-system" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<pre><code># arch-chroot /mnt
+</code></pre><p>Set the timezone.</p>
+<pre><code># ln -s /usr/share/zoneinfo/Asia/Karachi /etc/localtime
+# hwclock --systohc
+</code></pre><p>Replace Asia with your continent and Karachi with city.</p>
+<p>Set hostname</p>
+<pre><code># echo nix &gt; /etc/hostname
+</code></pre><p>Replace nix with name you wanna give your machine to.</p>
+<p>Set locales</p>
+<pre><code># vim /etc/locale.gen
+
+  #en_HK ISO-8859-1  
+  #en_IE.UTF-8 UTF-8  
+  #en_IE ISO-8859-1  
+  #en_IE@euro ISO-8859-15  
+  #en_IL UTF-8  
+  #en_IN UTF-8  
+  #en_NG UTF-8  
+  #en_NZ.UTF-8 UTF-8  
+  #en_NZ ISO-8859-1  
+  #en_PH.UTF-8 UTF-8  
+  #en_PH ISO-8859-1  
+  #en_SC.UTF-8 UTF-8  
+  #en_SG.UTF-8 UTF-8  
+  #en_SG ISO-8859-1  
+  en_US.UTF-8 UTF-8  
+  #en_US ISO-8859-1  
+  #en_ZA.UTF-8 UTF-8  
+  #en_ZA ISO-8859-1  
+  #en_ZM UTF-8  
+  #en_ZW.UTF-8 UTF-8  
+  #en_ZW ISO-8859-1  
+  #eo UTF-8  
+  #es_AR.UTF-8 UTF-8  
+  #es_AR ISO-8859-1  
+  #es_BO.UTF-8 UTF-8  
+</code></pre><p>Uncomment en_US.UTF-8 UTF-8 . (remove # from the beginning)</p>
+<pre><code># echo LANG=en_US.UTF-8 &gt; /etc/locale.conf
+# locale-gen
+</code></pre><p>Install some necessary software.</p>
+<pre><code># pacman -S wpa_supplicant dhclient dialog
+</code></pre><p>Create a user.</p>
+<pre><code># useradd -m -G wheel 'username'
+# passwd 'username'
+</code></pre><p>Create root password</p>
+<pre><code># passwd
+</code></pre><h3 id="mkinitcpio-configuration">mkinitcpio configuration<a href="#mkinitcpio-configuration" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>Edit the file <strong>/etc/mkinitcpio.conf</strong>. Copy this line or write in order in hooks line. Order matters so don&rsquo;t ignore or you will get un-bootable system.</p>
+<pre><code># vim /etc/mkinitcpio.conf
+
+HOOKS=(base udev autodetect keyboard keymap consolefont modconf block encrypt lvm2 filesystems resume fsck)
+
+</code></pre><p>Generate mkinitcpio</p>
+<pre><code>mkinitcpio -p linux
+</code></pre><h3 id="install-bootloader">Install bootloader<a href="#install-bootloader" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<pre><code># bootctl install 
+</code></pre><p>Create entries.</p>
+<p>Create a file <strong>/boot/loader/entries/arch.conf</strong>.</p>
+<pre><code># vim /boot/loader/entries/arch.conf
+
+title	ArchLinux
+linux	/vmlinuz-linux
+initrd	/initramfs-linux.img
+options cryptdevice=UUID=&lt;YOUR-PARTITION-UUID&gt;:lvm:allow-discards resume=/dev/mapper/nix-swap root=/dev/mapper/nix-root rw quiet
+
+</code></pre><p>Where UUID you can get using blkid. It would be in /dev/sda2.</p>
+<h3 id="un-mount-and-reboot">Un-mount and reboot<a href="#un-mount-and-reboot" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<pre><code># exit
+# umount /mnt
+# reboot
+</code></pre><p>Remove the USB device. And enjoy your new archlinux encrypted installation.</p>
+
+			</div>
+
+			<hr class="post-end">
+			<footer class="post-info">
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-feather"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path><line x1="16" y1="8" x2="2" y2="22"></line><line x1="17.5" y1="15" x2="9" y2="15"></line></svg>Abdullah</p>
+				<p>
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg><span class="tag"><a href="https://jamproductions.pk/tags/archlinux">archlinux</a></span><span class="tag"><a href="https://jamproductions.pk/tags/encryption">encryption</a></span><span class="tag"><a href="https://jamproductions.pk/tags/encrypted-install">encrypted install</a></span><span class="tag"><a href="https://jamproductions.pk/tags/luks">luks</a></span><span class="tag"><a href="https://jamproductions.pk/tags/lvm">lvm</a></span><span class="tag"><a href="https://jamproductions.pk/tags/luks_on_lvm">luks_on_lvm</a></span>
+				</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>1033 Words</p>
+				<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2020-01-03 05:00 &#43;0500</p>
+			</footer>
+		</article>
+		<aside id="toc">
+			<div class="toc-title">Table of Contents</div>
+			<nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#installation">Installation</a></li>
+        <li><a href="#installation-media-creation">Installation media creation</a></li>
+        <li><a href="#boot-the-media">Boot the media</a></li>
+        <li><a href="#connect-to-internet">Connect to internet</a></li>
+        <li><a href="#partitioning">Partitioning</a></li>
+        <li><a href="#create-file-systems">Create file systems</a></li>
+        <li><a href="#install-the-base-system">Install the base system</a></li>
+        <li><a href="#generate-fstab">Generate fstab</a></li>
+        <li><a href="#chroot-into-new-system">chroot into new system.</a></li>
+        <li><a href="#mkinitcpio-configuration">mkinitcpio configuration</a></li>
+        <li><a href="#install-bootloader">Install bootloader</a></li>
+        <li><a href="#un-mount-and-reboot">Un-mount and reboot</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+		</aside>
+		<div class="post-nav thin">
+			<a class="prev-post" href="https://jamproductions.pk/efistub/">
+				<span class="post-nav-label">Older&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></span><br><span>EFISTUB</span>
+			</a>
+		</div>
+		<div id="comments" class="thin">
+<div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "jamproductions-pk" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+	</main>
+
+
+
+
+	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+		<p>&copy; 2020 <a href="https://jamproductions.pk/">Jam Majid</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>
+			Made with ❤️ by <a href="https://abdullah.today/" target="_blank" rel="noopener">Abdullah</a> &#183; <a href="https://jamproductions.pk/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+		</p>
+	</footer>
+
+
+
+	<script src="https://jamproductions.pk/js/bundle.min.4a9a0ac3d2217822c7865b4161e6c2a71de1d70492264337755427898dd718f6.js" integrity="sha256-SpoKw9IheCLHhltBYebCpx3h1wSSJkM3dVQniY3XGPY=" crossorigin="anonymous"></script>
+	
+
+</body>
+
+</html>
