@@ -1,0 +1,78 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Posts on Jam Productions</title>
+		<link>https://jamproductions.pk/posts/</link>
+		<description>Recent content in Posts on Jam Productions</description>
+		<generator>Hugo -- gohugo.io</generator>
+		<language>en-us</language>
+		<lastBuildDate>Fri, 13 Sep 2019 00:00:00 +0000</lastBuildDate>
+		<atom:link href="https://jamproductions.pk/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>EFISTUB</title>
+			<link>https://jamproductions.pk/efistub/</link>
+			<pubDate>Fri, 13 Sep 2019 00:00:00 +0000</pubDate>
+			
+			<guid>https://jamproductions.pk/efistub/</guid>
+			<description>So in this post I&amp;rsquo;m gonna guide you how you can use efistub, a feature which you can use to boot the kernel without an extra boot manager(grub, systemd-boot, rEFInd etc.)
+Create a boot entry using efibootmgr.
+# efibootmgr --create --disk /dev/sda --part 1 --label Debian --loader /vmlinuz --unicode &amp;quot;root=/dev/sda2 rw initrd=\initrd.img&amp;quot; --verbose Explaination of the command.
+ --create &#39;creates a new boot entry&#39; --disk &#39;disk where you wanna create the boot entry&#39; --part &#39;partition number&#39; --label &#39;the label for new entry&#39; --loader &#39;loader to boot, it&#39;s vmlinuz in this example&#39; --unicode &#39;kernel parameters you can define here like initrd, swap, encrypted container for root&#39; --verbose &#39;let it verbose&#39; I have an encrypted installation on my machine so here is how I create an entry for me.</description>
+			<content type="html"><![CDATA[<p><img src="/images/efistub.png" alt="efistub"></p>
+<p>So in this post I&rsquo;m gonna guide you how you can use efistub, a feature which you can use to boot the kernel without an extra boot manager(grub, systemd-boot, rEFInd etc.)</p>
+<p>Create a boot entry using efibootmgr.</p>
+<pre><code># efibootmgr --create --disk /dev/sda --part 1 --label Debian --loader /vmlinuz --unicode &quot;root=/dev/sda2 rw initrd=\initrd.img&quot; --verbose
+</code></pre><p>Explaination of the command.</p>
+<pre><code> --create 'creates a new boot entry'
+ --disk   'disk where you wanna create the boot entry'
+ --part   'partition number'
+ --label  'the label for new entry'
+ --loader 'loader to boot, it's vmlinuz in this example'
+ --unicode 'kernel parameters you can define here like initrd, swap, encrypted container for root'
+ --verbose 'let it verbose'
+</code></pre><p>I have an encrypted installation on my machine so here is how I create an entry for me.</p>
+<pre><code># efibootmgr --create --disk /dev/sda --part 1 --label 'My Debian' --loader /vmlinuz --unicode &quot;cryptdevice=UUID=XXXXXXXXXXXXXXXXXX:cryptlvm root=UUID=XXXXXXXXXXXXXXXXXX rw initrd=\initrd.img resume=UUID=XXXXXXXXXXXXXXXXX&quot; --verbose
+</code></pre><p>where cryptdevice UUID is the UUID of my SSD&rsquo;s encrypted container&rsquo;s UUID and root&rsquo;s UUID is the UUID for my lvm volume where root is located, resume UUID is the lvm UUID where swap partition is. You can get UUID with blkid command.</p>
+<p>Now go to /boot directory and check for the vmlinuz and initrd.img. They might be in child directories like if EFI/grub or maybe somewhere else depending on your current boot managers. and move them to /boot. Also change your fstab (/etc/fstab) so that it mount your boot partition on /boot.</p>
+<pre><code># mv /boot/efi/grub/vmlinuz-4.19.0-1-rt-amd64 /boot/vmlinuz
+# mv /boot/efi/grub/initrd.img-4.9.0-8-amd64 /boot/initrd.img
+</code></pre><p>and your fstab should be look like this.</p>
+<pre><code>UUID=XXXX-XXXX    /boot     vfat    umask=0077  0   1
+</code></pre><p>By default, debian installs kernel and initrd images with their version numbers. But also puts a symlink to it in / with vmlinuz name. So we have to write a script so that if we get an update of kernel, it will automatically rename it to vmlinuz and initrd.img. Just create a script with following path and make it executable.</p>
+<pre><code># vim /etc/kernel/postinst.d/update-efistub
+
+#!/bin/sh
+cp /vmlinuz /boot/
+
+</code></pre><p>save it and make it executable.</p>
+<pre><code># chmod +x /etc/kernel/postinst.d/update-efistub
+</code></pre><p>and do the same with initramfs.</p>
+<pre><code># vim /etc/initramfs/post-update.d/update-efistub
+
+#!/bin/sh
+cp /initrd.img /boot/
+
+</code></pre><p>make it executable.</p>
+<pre><code>chmod +x /etc/initramfs/post-update.d/update-efistub
+</code></pre><p>That&rsquo;s it. Now uninstall any extra boot manager and reboot. You&rsquo;ll see that your machine is booting without a boot manager. Yeah, you heard it right. No sensible person will call it bootloader. They are just boot managers which also create an entry just like we did. So why don&rsquo;t we do it ourselves. Feel free to mail me if you get some errors.</p>
+<blockquote>
+<p><strong><em>NOTE:</em></strong> On a standard debian installation, installer creates an <em>ESP</em> if
+not already exists, and formats it as vFAT. And also creates another ext2
+formatted partition. Installer mounts <em>ESP</em> as <em>/boot/efi</em>. So for debian
+standard install, your command looks like this.</p>
+</blockquote>
+<pre><code># efibootmgr --create --disk /dev/sda --part 1 --label Debian --loader
+'\EFI\debian\vmlinuz' --unicode 'root=UUID=XXXX-XXXX-XXXX-XXX ro quiet
+initrd=\\EFI\\debian\\initrd.img' --verbose
+</code></pre><p>and for an encrypted installation with lvm, it should be.</p>
+<pre><code># efibootmgr --create --disk /dev/sda --part 1 --label Debian --loader
+'\EFI\debian\vmlinuz' --unicode 'cryptdevice=UUID=XXXX-XXXX-XXXX-XXXX:cryptlvm
+root=UUID=XXXX-XXXX-XXXX-XXXX ro quiet initrd=\\EFI\\debian\\initrd.img
+resume=UUID=XXXX-XXXX-XXXX-XXXX' --verbose
+</code></pre><p>where first UUID is your /dev/sda3 encrypted container UUID, root UUID is where
+rootfs is installed and resume UUID is your encrypted swap partition UUID.</p>
+]]></content>
+		</item>
+		
+	</channel>
+</rss>
