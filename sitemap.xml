@@ -3,6 +3,31 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://jamproductions.pk/posts/holding-new-domain/</loc>
+    <lastmod>2020-09-10T19:33:42+05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jamproductions.pk/</loc>
+    <lastmod>2020-09-10T19:33:42+05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jamproductions.pk/posts/</loc>
+    <lastmod>2020-09-10T19:33:42+05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jamproductions.pk/tags/</loc>
+    <lastmod>2020-09-10T19:33:42+05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jamproductions.pk/tags/untagged/</loc>
+    <lastmod>2020-09-10T19:33:42+05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://jamproductions.pk/about/</loc>
     <lastmod>2020-01-09T00:00:00+00:00</lastmod>
   </url>
@@ -28,11 +53,6 @@
   </url>
   
   <url>
-    <loc>https://jamproductions.pk/</loc>
-    <lastmod>2020-01-03T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://jamproductions.pk/tags/luks/</loc>
     <lastmod>2020-01-03T00:00:00+00:00</lastmod>
   </url>
@@ -44,16 +64,6 @@
   
   <url>
     <loc>https://jamproductions.pk/tags/lvm/</loc>
-    <lastmod>2020-01-03T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://jamproductions.pk/posts/</loc>
-    <lastmod>2020-01-03T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://jamproductions.pk/tags/</loc>
     <lastmod>2020-01-03T00:00:00+00:00</lastmod>
   </url>
   
